@@ -67,7 +67,7 @@ Extract all information accurately. If a field is not found, use null for option
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-1.5-flash-latest",
       generationConfig: {
         temperature: 0.3,
         maxOutputTokens: 2048,
@@ -117,7 +117,7 @@ Ensure bullet points are concise, impactful, and action-oriented.`
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-pro",
+      model: "gemini-1.5-pro-latest",
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 4096,
@@ -168,7 +168,7 @@ A well-structured, professional response. Return only the response text, no form
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-pro",
+      model: "gemini-1.5-pro-latest",
       generationConfig: {
         temperature: 0.8,
         maxOutputTokens: 1024,
