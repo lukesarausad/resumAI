@@ -93,11 +93,19 @@ Extract all information accurately. If a field is not found, use null for option
       throw new Error("No response from Gemini")
     }
 
+    // Log raw response for debugging
+    console.log("Raw Gemini response (first 500 chars):", text.substring(0, 500))
+
     // Extract JSON and parse
     const jsonText = extractJSON(text)
+    console.log("Extracted JSON (first 200 chars):", jsonText.substring(0, 200))
+
     return JSON.parse(jsonText)
   } catch (error) {
     console.error("Gemini parsing error:", error)
+    if (error instanceof Error) {
+      console.error("Error message:", error.message)
+    }
     throw new Error("Failed to parse resume with AI")
   }
 }
