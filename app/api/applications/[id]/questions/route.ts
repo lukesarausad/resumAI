@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { requireAuth } from "@/lib/session"
 import { prisma } from "@/lib/prisma"
-import { generateQuestionResponse } from "@/lib/openai"
+import { generateQuestionResponse } from "@/lib/ai"
 import { ResumeData, QuestionResponse } from "@/types/resume"
 import { z } from "zod"
 

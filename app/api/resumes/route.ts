@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { requireAuth } from "@/lib/session"
 import { prisma } from "@/lib/prisma"
 import { parsePDF } from "@/lib/pdf-parser"
-import { enhanceResumeWithAI } from "@/lib/openai"
+import { enhanceResumeWithAI } from "@/lib/ai"
 
 export async function POST(request: Request) {
   try {

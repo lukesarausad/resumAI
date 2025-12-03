@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { requireAuth } from "@/lib/session"
 import { prisma } from "@/lib/prisma"
-import { tailorResume } from "@/lib/openai"
+import { tailorResume } from "@/lib/ai"
 import { generateLatexContent } from "@/lib/latex"
 import { ResumeData } from "@/types/resume"
 import { z } from "zod"
