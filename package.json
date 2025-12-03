@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "kill -9 $(lsof -ti:3000) 2>/dev/null || true && next dev",
+    "kill": "kill -9 $(lsof -ti:3000) 2>/dev/null || true",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
