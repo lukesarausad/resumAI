@@ -1,6 +1,6 @@
 # resumAI - AI Resume & Application Assistant
 
-An AI-powered web application that tailors resumes to specific job postings and generates responses to application questions. Built with Next.js 14, OpenAI, and LaTeX.
+An AI-powered web application that tailors resumes to specific job postings and generates responses to application questions. Built with Next.js 14, Google Gemini, and LaTeX.
 
 ## Features
 
@@ -18,7 +18,7 @@ An AI-powered web application that tailors resumes to specific job postings and 
 - **Framework**: Next.js 14 (App Router) with TypeScript
 - **Database**: Prisma ORM with SQLite
 - **Authentication**: NextAuth.js with credentials provider
-- **AI**: OpenAI API (GPT-4o and GPT-4o-mini)
+- **AI**: Google Gemini API (Gemini 1.5 Flash and Pro)
 - **PDF Processing**: pdf-parse for reading, node-latex for generation
 - **Styling**: Tailwind CSS + shadcn/ui components
 - **LaTeX Template**: Jake's Resume format
@@ -32,7 +32,7 @@ Before you begin, ensure you have installed:
   - **macOS**: `brew install --cask mactex`
   - **Ubuntu/Debian**: `sudo apt-get install texlive-full`
   - **Windows**: Install [MiKTeX](https://miktex.org/download)
-- OpenAI API key
+- Google Gemini API key
 
 ## Installation
 
@@ -67,8 +67,8 @@ DATABASE_URL="file:./dev.db"
 NEXTAUTH_SECRET="your-secret-key-here"
 NEXTAUTH_URL="http://localhost:3000"
 
-# OpenAI
-OPENAI_API_KEY="your-openai-api-key-here"
+# Google Gemini
+GEMINI_API_KEY="your-openai-api-key-here"
 
 # Optional
 NODE_ENV="development"
@@ -119,7 +119,7 @@ resumAI/
 │   ├── auth.ts             # NextAuth configuration
 │   ├── prisma.ts           # Prisma client
 │   ├── session.ts          # Session utilities
-│   ├── openai.ts           # OpenAI integration
+│   ├── openai.ts           # Google Gemini integration
 │   ├── pdf-parser.ts       # PDF parsing logic
 │   ├── latex.ts            # LaTeX generation
 │   └── latex-compiler.ts   # LaTeX to PDF compilation
@@ -303,7 +303,7 @@ The application uses Jake's Resume template, which provides:
 1. Set up a production database (SQLite or PostgreSQL)
 2. Configure environment variables
 3. Ensure LaTeX is installed on the server
-4. Set up OpenAI API access
+4. Set up Google Gemini API access
 
 ### Build
 
@@ -341,7 +341,7 @@ The current implementation uses basic text extraction. For better results:
 - Use standard resume formatting
 - The AI parser is quite flexible but works best with clear structure
 
-### OpenAI API Errors
+### Google Gemini API Errors
 
 - Check your API key is valid
 - Ensure you have sufficient credits
@@ -349,7 +349,7 @@ The current implementation uses basic text extraction. For better results:
 
 ## Cost Estimates
 
-OpenAI API usage per action:
+Google Gemini API usage per action:
 - Resume parsing: ~$0.01-0.02 (GPT-4o-mini)
 - Resume tailoring: ~$0.05-0.10 (GPT-4o)
 - Question response: ~$0.03-0.06 (GPT-4o)
@@ -385,9 +385,9 @@ MIT License
 
 - Jake's Resume template by Jake Gutierrez
 - shadcn/ui for the component library
-- OpenAI for AI capabilities
+- Google Gemini for AI capabilities
 - Next.js team for the excellent framework
 
 ---
 
-Built with Next.js, OpenAI, and LaTeX
+Built with Next.js, Google Gemini, and LaTeX

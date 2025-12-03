@@ -1,9 +1,17 @@
-import OpenAI from "openai"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 import { ResumeData, QuestionResponse } from "@/types/resume"
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
+
+// Helper function to extract JSON from markdown code blocks
+function extractJSON(text: string): string {
+  // Remove markdown code blocks if present
+  const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/) || text.match(/```\n([\s\S]*?)\n```/)
+  if (jsonMatch) {
+    return jsonMatch[1].trim()
+  }
+  return text.trim()
+}
 
 export async function enhanceResumeWithAI(
   pdfText: string
@@ -13,15 +21,15 @@ export async function enhanceResumeWithAI(
 Resume text:
 ${pdfText}
 
-Return a JSON object with this exact structure:
+Return ONLY a valid JSON object with this exact structure (no markdown, no explanations):
 {
   "contact": {
     "name": "string",
-    "phone": "string (optional)",
+    "phone": "string or null",
     "email": "string",
-    "linkedin": "string (optional)",
-    "github": "string (optional)",
-    "website": "string (optional)"
+    "linkedin": "string or null",
+    "github": "string or null",
+    "website": "string or null"
   },
   "education": [
     {
@@ -29,8 +37,8 @@ Return a JSON object with this exact structure:
       "degree": "string",
       "location": "string",
       "date": "string",
-      "gpa": "string (optional)",
-      "coursework": ["string"] (optional)
+      "gpa": "string or null",
+      "coursework": ["string"] or null
     }
   ],
   "experience": [
@@ -46,7 +54,7 @@ Return a JSON object with this exact structure:
     {
       "name": "string",
       "technologies": ["string"],
-      "date": "string (optional)",
+      "date": "string or null",
       "bullets": ["string"]
     }
   ],
@@ -55,33 +63,30 @@ Return a JSON object with this exact structure:
   }
 }
 
-Extract all information accurately. If a field is not found, use null for optional fields or empty arrays.`
+Extract all information accurately. If a field is not found, use null for optional fields or empty arrays. Return ONLY the JSON object.`
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are a professional resume parser. Always respond with valid JSON only.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      temperature: 0.3,
-      response_format: { type: "json_object" },
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 2048,
+      }
     })
 
-    const content = completion.choices[0].message.content
-    if (!content) {
-      throw new Error("No response from OpenAI")
+    const result = await model.generateContent(prompt)
+    const response = await result.response
+    const text = response.text()
+
+    if (!text) {
+      throw new Error("No response from Gemini")
     }
 
-    return JSON.parse(content)
+    // Extract JSON and parse
+    const jsonText = extractJSON(text)
+    return JSON.parse(jsonText)
   } catch (error) {
-    console.error("OpenAI parsing error:", error)
+    console.error("Gemini parsing error:", error)
     throw new Error("Failed to parse resume with AI")
   }
 }
@@ -107,34 +112,31 @@ Tailor the resume to maximize relevance for this specific job by:
 5. Maintaining truthfulness (no fabrication)
 
 Output:
-Valid JSON matching the resume data structure exactly.
+Return ONLY a valid JSON object matching the original resume data structure exactly. No markdown formatting, no explanations.
 Ensure bullet points are concise, impactful, and action-oriented.`
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "You are a professional resume writer. Always respond with valid JSON only.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      temperature: 0.7,
-      response_format: { type: "json_object" },
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 4096,
+      }
     })
 
-    const content = completion.choices[0].message.content
-    if (!content) {
-      throw new Error("No response from OpenAI")
+    const result = await model.generateContent(prompt)
+    const response = await result.response
+    const text = response.text()
+
+    if (!text) {
+      throw new Error("No response from Gemini")
     }
 
-    return JSON.parse(content)
+    // Extract JSON and parse
+    const jsonText = extractJSON(text)
+    return JSON.parse(jsonText)
   } catch (error) {
-    console.error("OpenAI tailoring error:", error)
+    console.error("Gemini tailoring error:", error)
     throw new Error("Failed to tailor resume with AI")
   }
 }
@@ -162,33 +164,28 @@ Generate a compelling response that:
 5. Uses concrete examples, not generic statements
 
 Output:
-A well-structured, professional response.`
+A well-structured, professional response. Return only the response text, no formatting or explanations.`
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "You are a professional career coach helping write compelling application responses.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      temperature: 0.8,
-      max_tokens: 500,
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        temperature: 0.8,
+        maxOutputTokens: 1024,
+      }
     })
 
-    const content = completion.choices[0].message.content
-    if (!content) {
-      throw new Error("No response from OpenAI")
+    const result = await model.generateContent(prompt)
+    const response = await result.response
+    const text = response.text()
+
+    if (!text) {
+      throw new Error("No response from Gemini")
     }
 
-    return content.trim()
+    return text.trim()
   } catch (error) {
-    console.error("OpenAI question response error:", error)
+    console.error("Gemini question response error:", error)
     throw new Error("Failed to generate question response")
   }
 }

@@ -12,10 +12,10 @@ npm install
 cp .env.example .env
 ```
 
-Then edit `.env` and add your OpenAI API key:
+Then edit `.env` and add your Google Gemini API key:
 
 ```env
-OPENAI_API_KEY="your-openai-api-key-here"
+GEMINI_API_KEY="your-openai-api-key-here"
 ```
 
 ## Step 3: Initialize Database
