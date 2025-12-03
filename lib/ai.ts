@@ -67,7 +67,7 @@ Extract all information accurately. If a field is not found, use null for option
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-pro",
+      model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.3,
         maxOutputTokens: 2048,
