@@ -5,19 +5,21 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
 
 // Helper function to extract JSON from markdown code blocks
 function extractJSON(text: string): string {
-  // Remove markdown code blocks if present - try multiple patterns
   let cleaned = text.trim()
 
-  // Try to match ```json ... ``` format
-  let match = cleaned.match(/```json\s*([\s\S]*?)\s*```/)
-  if (match) {
-    return match[1].trim()
+  // Remove ```json and ``` markers
+  // Pattern 1: ```json\n...\n```
+  if (cleaned.startsWith('```json')) {
+    cleaned = cleaned.replace(/^```json\s*/, '')  // Remove opening
+    cleaned = cleaned.replace(/\s*```\s*$/, '')    // Remove closing
+    return cleaned.trim()
   }
 
-  // Try to match ``` ... ``` format
-  match = cleaned.match(/```\s*([\s\S]*?)\s*```/)
-  if (match) {
-    return match[1].trim()
+  // Pattern 2: ```\n...\n```
+  if (cleaned.startsWith('```')) {
+    cleaned = cleaned.replace(/^```\s*/, '')       // Remove opening
+    cleaned = cleaned.replace(/\s*```\s*$/, '')    // Remove closing
+    return cleaned.trim()
   }
 
   // If no code blocks, return as is
